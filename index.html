@@ -783,22 +783,22 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-xs text-gray-500 mb-1.5">Full Name</label>
-              <input type="text" placeholder="Chidi Okonkwo" required class="finput">
+              <input type="text" id="bname" placeholder="Chidi Okonkwo" required class="finput">
             </div>
             <div>
               <label class="block text-xs text-gray-500 mb-1.5">Phone</label>
-              <input type="tel" placeholder="+234 800 000 0000" required class="finput">
+              <input type="tel" id="bphone" placeholder="+234 800 000 0000" required class="finput">
             </div>
           </div>
 
           <div>
             <label class="block text-xs text-gray-500 mb-1.5">Email Address</label>
-            <input type="email" placeholder="you@email.com" class="finput">
+            <input type="email" id="bemail" placeholder="you@email.com" class="finput">
           </div>
 
           <div>
             <label class="block text-xs text-gray-500 mb-1.5">Select Service</label>
-            <select required class="finput text-gray-300 cursor-pointer" style="background:#0d0d0d">
+            <select id="bservice" required class="finput text-gray-300 cursor-pointer" style="background:#0d0d0d">
               <option value="">Choose a service…</option>
               <optgroup label="Haircuts" style="background:#1f1f1f">
                 <option>Men's Cut — ₦3,500</option>
@@ -850,7 +850,7 @@
 
           <div>
             <label class="block text-xs text-gray-500 mb-1.5">Notes <span class="text-gray-700">(optional)</span></label>
-            <textarea rows="3" placeholder="Reference style, allergies, or any special request…" class="finput resize-none"></textarea>
+            <textarea id="bnotes" rows="3" placeholder="Reference style, allergies, or any special request…" class="finput resize-none"></textarea>
           </div>
 
           <button type="submit" class="btn-gold w-full py-4 rounded-xl text-sm">Confirm Booking</button>
@@ -861,8 +861,9 @@
           <div class="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-5">
             <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
           </div>
-          <h4 class="font-serif text-2xl text-white mb-2">Booking Received!</h4>
-          <p class="text-gray-500 text-sm">We'll confirm your slot within 30 minutes via WhatsApp or call.</p>
+          <h4 class="font-serif text-2xl text-white mb-2">WhatsApp Opened!</h4>
+          <p class="text-gray-500 text-sm leading-relaxed">Your booking details have been pre-filled in WhatsApp.<br>Just hit <span class="text-white font-medium">Send</span> and Kar will confirm your slot shortly.</p>
+          <p class="text-gray-600 text-xs mt-3">Didn't open? <a href="https://wa.me/2348101837353" target="_blank" class="text-gold underline underline-offset-4">Click here to open WhatsApp directly.</a></p>
           <button onclick="resetForm()" class="mt-6 text-gold text-sm underline underline-offset-4">Book another appointment</button>
         </div>
 
@@ -997,13 +998,51 @@
   /* ── Set min date ── */
   document.getElementById('bdate').min = new Date().toISOString().split('T')[0];
 
-  /* ── Booking submit ── */
+  /* ── Booking submit → WhatsApp ── */
   function submitBooking(e) {
     e.preventDefault();
-    if (!document.getElementById('chosenTime').value) {
-      alert('Please select a time slot.');
+
+    const time = document.getElementById('chosenTime').value;
+    if (!time) {
+      alert('Please select a preferred time slot.');
       return;
     }
+
+    const name    = document.getElementById('bname').value.trim();
+    const phone   = document.getElementById('bphone').value.trim();
+    const email   = document.getElementById('bemail').value.trim();
+    const service = document.getElementById('bservice').value;
+    const date    = document.getElementById('bdate').value;
+    const notes   = document.getElementById('bnotes').value.trim();
+
+    // Format date to readable string, accounting for timezone offset
+    let dateFormatted = 'Not specified';
+    if (date) {
+      const [y, m, d] = date.split('-');
+      dateFormatted = new Date(+y, +m - 1, +d).toLocaleDateString('en-NG', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+    }
+
+    const lines = [
+      '👋 *New Booking — KarKutz*',
+      '',
+      `*Name:* ${name}`,
+      `*Phone:* ${phone}`,
+    ];
+    if (email) lines.push(`*Email:* ${email}`);
+    lines.push(
+      '',
+      `*Service:* ${service}`,
+      `*Date:* ${dateFormatted}`,
+      `*Time:* ${time}`,
+    );
+    if (notes) lines.push('', `*Notes:* ${notes}`);
+    lines.push('', '_Sent via karkutz.ng booking form_');
+
+    const waURL = `https://wa.me/2348101837353?text=${encodeURIComponent(lines.join('\n'))}`;
+    window.open(waURL, '_blank');
+
     document.getElementById('bform').classList.add('hidden');
     document.getElementById('bsuccess').classList.remove('hidden');
   }
