@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6KarKutz — Breath of Fresh Hair</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: { DEFAULT: '#c9a84c', light: '#e8c96d', dark: '#a0833a' },
+            ink:  { DEFAULT: '#0d0d0d', surface: '#181818', card: '#1f1f1f', border: '#2c2c2c' }
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans:  ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: #0d0d0d; color: #f0f0f0; font-family: 'Inter', sans-serif; }
+
+    .gold-text {
+      background: linear-gradient(135deg, #c9a84c 0%, #f0d98a 50%, #a0833a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gold-line { position: relative; padding-left: 1rem; }
+    .gold-line::before {
+      content: ''; position: absolute; left: 0; top: 50%;
+      transform: translateY(-50%); width: 3px; height: 100%;
+      background: #c9a84c; border-radius: 2px;
+    }
+
+    /* Nav */
+    #navbar { transition: background 0.3s, box-shadow 0.3s; }
+    #navbar.scrolled {
+      background: rgba(13,13,13,0.97) !important;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(201,168,76,0.15);
+    }
+
+    /* Reveal animation */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.stagger-1 { transition-delay: 0.1s; }
+    .reveal.stagger-2 { transition-delay: 0.2s; }
+    .reveal.stagger-3 { transition-delay: 0.3s; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Hero */
+    .hero-bg {
+      background-image: url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1920&q=85');
+      background-size: cover; background-position: center top; background-attachment: fixed;
+    }
+
+    /* Buttons */
+    .btn-gold {
+      background: linear-gradient(135deg, #c9a84c, #e8c96d);
+      color: #0d0d0d; font-weight: 600;
+      transition: all 0.25s ease;
+      display: inline-block;
+    }
+    .btn-gold:hover {
+      background: linear-gradient(135deg, #e8c96d, #c9a84c);
+      box-shadow: 0 8px 28px rgba(201,168,76,0.35);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      border: 1.5px solid rgba(255,255,255,0.25); color: #fff;
+      transition: all 0.25s ease; display: inline-block;
+    }
+    .btn-outline:hover { border-color: #c9a84c; color: #c9a84c; }
+
+    /* Cards */
+    .service-card { border: 1px solid #2c2c2c; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; }
+    .service-card:hover {
+      border-color: rgba(201,168,76,0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.1);
+    }
+
+    /* Portfolio */
+    .port-item { overflow: hidden; border-radius: 0.75rem; position: relative; cursor: pointer; }
+    .port-item img { transition: transform 0.5s ease; display: block; width: 100%; height: 100%; object-fit: cover; }
+    .port-item:hover img { transform: scale(1.06); }
+    .port-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+      opacity: 0; transition: opacity 0.3s;
+      display: flex; align-items: flex-end; padding: 1rem;
+    }
+    .port-item:hover .port-overlay { opacity: 1; }
+
+    /* Time slots */
+    .slot { cursor: pointer; border: 1px solid #2c2c2c; color: #9ca3af; border-radius: 0.5rem; padding: 0.45rem 0; font-size: 0.75rem; font-weight: 500; text-align: center; transition: all 0.2s; }
+    .slot:hover { border-color: #c9a84c; color: #c9a84c; }
+    .slot.active { background: #c9a84c; border-color: #c9a84c; color: #0d0d0d; }
+
+    /* Form inputs */
+    .finput {
+      background: #0d0d0d; border: 1px solid #2c2c2c; color: #f0f0f0;
+      border-radius: 0.75rem; padding: 0.75rem 1rem; width: 100%; font-size: 0.875rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .finput::placeholder { color: #4b5563; }
+    .finput:focus { outline: none; border-color: #c9a84c; box-shadow: 0 0 0 3px rgba(201,168,76,0.12); }
+
+    /* Testimonial */
+    .t-card { border-left: 3px solid #c9a84c; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0d0d0d; }
+    ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
+
+    /* Filter pills */
+    .fpill { border: 1px solid #2c2c2c; color: #9ca3af; border-radius: 9999px; padding: 0.4rem 1.1rem; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .fpill:hover { border-color: #c9a84c; color: #c9a84c; }
+    .fpill.active { background: #c9a84c; border-color: #c9a84c; color: #0d0d0d; }
+
+    /* Specialty number watermark */
+    .spec-num { font-family: 'Playfair Display', serif; font-size: 4.5rem; line-height: 1; color: rgba(201,168,76,0.08); position: absolute; top: -0.5rem; left: 0; font-weight: 700; pointer-events: none; user-select: none; }
+  </style>
+</head>
+<body class="antialiased">
+
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 py-4 px-6 lg:px-14">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+    <a href="#home" class="flex items-center gap-3 group">
+      <img src="IMG-20260409-WA0059(2).jpg" alt="6KarKutz" class="h-11 w-11 rounded-full object-cover ring-1 ring-gold/30">
+      <div class="leading-none">
+        <p class="font-serif text-[1.15rem] font-bold text-white tracking-wide">6Kar<span class="gold-text">Kutz</span></p>
+        <p class="text-[0.6rem] text-gray-500 tracking-[0.22em] uppercase mt-0.5">Breath of Fresh Hair</p>
+      </div>
+    </a>
+
+    <div class="hidden lg:flex items-center gap-7">
+      <a href="#about"       class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+      <a href="#services"    class="text-sm text-gray-400 hover:text-white transition-colors">Services</a>
+      <a href="#specialties" class="text-sm text-gray-400 hover:text-white transition-colors">Specialties</a>
+      <a href="#portfolio"   class="text-sm text-gray-400 hover:text-white transition-colors">Portfolio</a>
+      <a href="#booking" class="btn-gold px-5 py-2.5 rounded-full text-sm">Book Now</a>
+    </div>
+
+    <button id="burger" class="lg:hidden text-white p-1.5" aria-label="Menu">
+      <svg id="burger-open"  class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg id="burger-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mobile-nav" class="hidden lg:hidden mt-3 pb-4 border-t border-ink-border">
+    <div class="flex flex-col gap-4 pt-4 px-2">
+      <a href="#about"       onclick="closeNav()" class="text-gray-300 hover:text-white transition-colors py-1">About</a>
+      <a href="#services"    onclick="closeNav()" class="text-gray-300 hover:text-white transition-colors py-1">Services</a>
+      <a href="#specialties" onclick="closeNav()" class="text-gray-300 hover:text-white transition-colors py-1">Specialties</a>
+      <a href="#portfolio"   onclick="closeNav()" class="text-gray-300 hover:text-white transition-colors py-1">Portfolio</a>
+      <a href="#booking"     onclick="closeNav()" class="btn-gold px-5 py-3 rounded-full text-sm text-center">Book Now</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+<section id="home" class="hero-bg relative min-h-screen flex items-center">
+  <div class="absolute inset-0 bg-gradient-to-r from-black/92 via-black/65 to-black/30"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-14 pt-24 pb-20">
+    <div class="max-w-xl">
+      <p class="gold-text text-xs font-semibold tracking-[0.35em] uppercase mb-8">Est. 2021 · Nigeria</p>
+
+      <h1 class="font-serif text-5xl md:text-[4.2rem] lg:text-[5rem] font-bold text-white leading-[1.05] mb-7">
+        Where Every<br>Cut Tells<br>
+        <span class="gold-text italic">a Story.</span>
+      </h1>
+
+      <p class="text-gray-300 text-lg leading-relaxed mb-10">
+        Premium barbering &amp; natural hair care in the heart of Enugu.<br>Crafting confidence, one cut at a time.
+      </p>
+
+      <div class="flex flex-wrap gap-4">
+        <a href="#booking" class="btn-gold px-8 py-3.5 rounded-full text-sm">Book an Appointment</a>
+        <a href="#portfolio" class="btn-outline px-8 py-3.5 rounded-full text-sm">View Portfolio</a>
+      </div>
+
+      <div class="flex gap-10 mt-16 pt-10 border-t border-white/10">
+        <div>
+          <p class="font-serif text-3xl font-bold text-white">5<span class="text-gold">+</span></p>
+          <p class="text-gray-500 text-xs mt-1 tracking-wide">Years Experience</p>
+        </div>
+        <div>
+          <p class="font-serif text-3xl font-bold text-white">500<span class="text-gold">+</span></p>
+          <p class="text-gray-500 text-xs mt-1 tracking-wide">Happy Clients</p>
+        </div>
+        <div>
+          <p class="font-serif text-3xl font-bold text-white">15<span class="text-gold">+</span></p>
+          <p class="text-gray-500 text-xs mt-1 tracking-wide">Services Offered</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50">
+    <span class="text-white text-[0.6rem] tracking-[0.3em] uppercase">Scroll</span>
+    <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     ABOUT / BIO
+═══════════════════════════════════════════════════════ -->
+<section id="about" class="py-24 lg:py-36 px-6 lg:px-14 bg-ink">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+
+    <!-- Image column -->
+    <div class="reveal relative">
+      <div class="relative max-w-md mx-auto lg:mx-0">
+        <!-- Years badge -->
+        <div class="absolute -top-5 -left-5 z-10 w-[88px] h-[88px] rounded-full bg-gold flex flex-col items-center justify-center shadow-2xl">
+          <span class="font-serif text-2xl font-bold text-ink leading-none">5+</span>
+          <span class="text-ink/70 text-[0.6rem] font-semibold tracking-wide mt-0.5">YEARS EXP</span>
+        </div>
+        <!-- Photo -->
+        <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-ink-card">
+          <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=85"
+               alt="Kareem — Master Barber" class="w-full h-full object-cover">
+        </div>
+        <!-- Rating chip -->
+        <div class="absolute -bottom-5 -right-5 z-10 bg-ink-card border border-ink-border rounded-2xl px-5 py-4 shadow-2xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <div>
+              <p class="text-white text-sm font-semibold">5.0 Stars</p>
+              <p class="text-gray-500 text-xs">500+ Reviews</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text column -->
+    <div class="reveal stagger-1">
+      <p class="text-gold text-xs font-semibold tracking-[0.3em] uppercase mb-3">Meet The Artist</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-bold text-white leading-tight mb-1">Adaeze "6Kar"<br>Ejikeme</h2>
+      <p class="text-gray-500 text-sm tracking-widest mb-8">Master Barber &amp; Hair Stylist</p>
+
+      <p class="text-gray-300 leading-[1.85] mb-5">
+        With over five years of professional experience, 6Kar has become one of Enugu's most sought-after barbers. Her approach blends sharp technical precision with genuine artistry — every client walks out looking and feeling their absolute best.
+      </p>
+      <p class="text-gray-400 leading-[1.85] mb-10">
+        Trained at a certified, well recognized barbering institute, and certified in advanced hair care, 6Kar specialises in textured and afro hair, bringing both cultural pride and professional excellence to every session.
+      </p>
+
+      <!-- Qualifications list -->
+      <div class="mb-10">
+        <p class="text-white text-xs font-semibold tracking-[0.25em] uppercase mb-5">Qualifications &amp; Training</p>
+        <div class="space-y-4">
+          <div class="flex gap-3 items-start gold-line pl-5">
+            <div>
+              <p class="text-white text-sm font-medium">Certified Master Barber</p>
+              <p class="text-gray-500 text-xs mt-0.5">Lagos State Beauty Institute, 2019</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start gold-line pl-5">
+            <div>
+              <p class="text-white text-sm font-medium">Advanced Textured Hair Specialist</p>
+              <p class="text-gray-500 text-xs mt-0.5">African Hair Academy, 2021</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start gold-line pl-5">
+            <div>
+              <p class="text-white text-sm font-medium">Color Treatment &amp; Chemical Services</p>
+              <p class="text-gray-500 text-xs mt-0.5">L'Oréal Professional Certification, 2022</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start gold-line pl-5">
+            <div>
+              <p class="text-white text-sm font-medium">Braiding &amp; Extensions Specialist</p>
+              <p class="text-gray-500 text-xs mt-0.5">West African Hair Conference, 2023</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quote block -->
+      <div class="bg-ink-card rounded-xl p-6 border border-ink-border">
+        <p class="text-gold text-[0.65rem] font-bold tracking-[0.25em] uppercase mb-3">My Philosophy</p>
+        <p class="text-gray-300 italic leading-relaxed text-sm">
+          "Hair is an extension of identity. I don't just cut hair — I listen to each person's story and craft a look that reflects who they truly are."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SERVICES
+═══════════════════════════════════════════════════════ -->
+<section id="services" class="py-24 lg:py-36 px-6 lg:px-14 bg-ink-surface">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="text-center mb-16 reveal">
+      <p class="text-gold text-xs font-semibold tracking-[0.35em] uppercase mb-4">What We Offer</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-bold text-white mb-5">Our Services</h2>
+      <p class="text-gray-500 max-w-md mx-auto text-sm leading-relaxed">From classic cuts to intricate braids — a full spectrum of hair services for every texture and style.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- Haircuts -->
+      <div class="service-card bg-ink-card rounded-2xl p-7 reveal">
+        <div class="w-11 h-11 rounded-xl bg-gold/10 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/></svg>
+        </div>
+        <h3 class="font-serif text-xl text-white font-semibold mb-2">Haircuts</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-5">Precision cuts tailored to face shape, hair type and personal style. Every cut includes a hot towel finish.</p>
+        <div class="space-y-1">
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Men's Cut</span>
+            <span class="text-gold text-sm font-semibold">₦3,500</span>
+          </div>
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Women's Cut &amp; Style</span>
+            <span class="text-gold text-sm font-semibold">₦6,000</span>
+          </div>
+          <div class="flex justify-between py-2.5">
+            <span class="text-gray-400 text-sm">Kids (under 12)</span>
+            <span class="text-gold text-sm font-semibold">₦2,500</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Styling -->
+      <div class="service-card bg-ink-card rounded-2xl p-7 reveal stagger-1">
+        <div class="w-11 h-11 rounded-xl bg-gold/10 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </div>
+        <h3 class="font-serif text-xl text-white font-semibold mb-2">Styling</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-5">Blow-outs, sleek finishes, wash-and-gos. We use premium products to achieve any look you desire.</p>
+        <div class="space-y-1">
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Blow-Out &amp; Style</span>
+            <span class="text-gold text-sm font-semibold">₦5,000</span>
+          </div>
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Waves &amp; Curls</span>
+            <span class="text-gold text-sm font-semibold">₦4,500</span>
+          </div>
+          <div class="flex justify-between py-2.5">
+            <span class="text-gray-400 text-sm">Loc Maintenance</span>
+            <span class="text-gold text-sm font-semibold">₦7,000+</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Braids -->
+      <div class="service-card bg-ink-card rounded-2xl p-7 reveal stagger-2">
+        <div class="w-11 h-11 rounded-xl bg-gold/10 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+        </div>
+        <h3 class="font-serif text-xl text-white font-semibold mb-2">Braids &amp; Extensions</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-5">Box braids to cornrows — intricate braiding using only quality hair extensions.</p>
+        <div class="space-y-1">
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Box Braids</span>
+            <span class="text-gold text-sm font-semibold">₦12,000+</span>
+          </div>
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Cornrows</span>
+            <span class="text-gold text-sm font-semibold">₦5,000+</span>
+          </div>
+          <div class="flex justify-between py-2.5">
+            <span class="text-gray-400 text-sm">Faux Locs</span>
+            <span class="text-gold text-sm font-semibold">₦18,000+</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color -->
+      <div class="service-card bg-ink-card rounded-2xl p-7 reveal">
+        <div class="w-11 h-11 rounded-xl bg-gold/10 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z"/></svg>
+        </div>
+        <h3 class="font-serif text-xl text-white font-semibold mb-2">Color Treatments</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-5">Bold transformations or subtle enhancements — professional-grade products safe for all hair types.</p>
+        <div class="space-y-1">
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Full Color</span>
+            <span class="text-gold text-sm font-semibold">₦15,000+</span>
+          </div>
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Highlights</span>
+            <span class="text-gold text-sm font-semibold">₦18,000+</span>
+          </div>
+          <div class="flex justify-between py-2.5">
+            <span class="text-gray-400 text-sm">Touch-Up / Roots</span>
+            <span class="text-gold text-sm font-semibold">₦8,000+</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Special Occasion -->
+      <div class="service-card bg-ink-card rounded-2xl p-7 reveal stagger-1">
+        <div class="w-11 h-11 rounded-xl bg-gold/10 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+        </div>
+        <h3 class="font-serif text-xl text-white font-semibold mb-2">Special Occasion</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-5">Looking perfect for your big day? Wedding, graduation, and event styling packages available.</p>
+        <div class="space-y-1">
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Wedding Grooming</span>
+            <span class="text-gold text-sm font-semibold">₦25,000</span>
+          </div>
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Graduation Look</span>
+            <span class="text-gold text-sm font-semibold">₦10,000</span>
+          </div>
+          <div class="flex justify-between py-2.5">
+            <span class="text-gray-400 text-sm">Event / Party Prep</span>
+            <span class="text-gold text-sm font-semibold">₦8,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Beard -->
+      <div class="service-card bg-ink-card rounded-2xl p-7 reveal stagger-2">
+        <div class="w-11 h-11 rounded-xl bg-gold/10 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"/></svg>
+        </div>
+        <h3 class="font-serif text-xl text-white font-semibold mb-2">Beard &amp; Mustache</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-5">Precision beard shaping, hot towel shaves, and mustache grooming for a sharp, defined look.</p>
+        <div class="space-y-1">
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Beard Trim &amp; Shape</span>
+            <span class="text-gold text-sm font-semibold">₦2,500</span>
+          </div>
+          <div class="flex justify-between py-2.5 border-b border-ink-border">
+            <span class="text-gray-400 text-sm">Hot Towel Shave</span>
+            <span class="text-gold text-sm font-semibold">₦3,500</span>
+          </div>
+          <div class="flex justify-between py-2.5">
+            <span class="text-gray-400 text-sm">Cut + Beard Combo</span>
+            <span class="text-gold text-sm font-semibold">₦5,500</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SPECIALTIES
+═══════════════════════════════════════════════════════ -->
+<section id="specialties" class="py-24 lg:py-36 px-6 lg:px-14 bg-ink overflow-hidden">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+
+    <!-- Left -->
+    <div class="reveal">
+      <p class="text-gold text-xs font-semibold tracking-[0.35em] uppercase mb-4">Expert Techniques</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-bold text-white mb-6">Our <span class="italic">Specialties</span></h2>
+      <p class="text-gray-400 text-sm leading-relaxed mb-10 max-w-sm">
+        Deep-rooted expertise in African and textured hair. Our techniques honour the natural beauty of every hair type while delivering results that turn heads.
+      </p>
+      <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-ink-card">
+        <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=85"
+             alt="Specialty barbering" class="w-full h-full object-cover">
+      </div>
+    </div>
+
+    <!-- Right: numbered specialties -->
+    <div class="space-y-8 lg:pt-20">
+
+      <div class="reveal relative pl-6 pt-1 pb-1">
+        <span class="spec-num">01</span>
+        <div class="relative z-10">
+          <h3 class="font-serif text-xl text-white font-semibold mb-2 flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-gold flex items-center justify-center flex-shrink-0">
+              <svg class="w-3.5 h-3.5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </span>
+            Afro Hair Care
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed pl-10">Specialised care for natural afro textures — from 4C coils to loose curls. Moisturising techniques that preserve curl pattern and promote healthy growth.</p>
+        </div>
+      </div>
+      <div class="h-px bg-ink-border"></div>
+
+      <div class="reveal stagger-1 relative pl-6 pt-1 pb-1">
+        <span class="spec-num">02</span>
+        <div class="relative z-10">
+          <h3 class="font-serif text-xl text-white font-semibold mb-2 flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-gold flex items-center justify-center flex-shrink-0">
+              <svg class="w-3.5 h-3.5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </span>
+            Natural Hair Styling
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed pl-10">Twist-outs, braid-outs, wash-and-gos, and protective styles that celebrate your natural hair. We work with your hair's structure, not against it.</p>
+        </div>
+      </div>
+      <div class="h-px bg-ink-border"></div>
+
+      <div class="reveal stagger-2 relative pl-6 pt-1 pb-1">
+        <span class="spec-num">03</span>
+        <div class="relative z-10">
+          <h3 class="font-serif text-xl text-white font-semibold mb-2 flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-gold flex items-center justify-center flex-shrink-0">
+              <svg class="w-3.5 h-3.5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </span>
+            Edge Control &amp; Lining
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed pl-10">Crisp, defined lines and perfect edges. From precise hairline shaping to creative part designs — our edge work is what sets us apart.</p>
+        </div>
+      </div>
+      <div class="h-px bg-ink-border"></div>
+
+      <div class="reveal stagger-3 relative pl-6 pt-1 pb-1">
+        <span class="spec-num">04</span>
+        <div class="relative z-10">
+          <h3 class="font-serif text-xl text-white font-semibold mb-2 flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-gold flex items-center justify-center flex-shrink-0">
+              <svg class="w-3.5 h-3.5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </span>
+            Beard &amp; Mustache Grooming
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed pl-10">Sculpted beards, clean fades, immaculate mustaches. Hot towel shaves, beard conditioning, and custom shaping to complement your face structure.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PORTFOLIO
+═══════════════════════════════════════════════════════ -->
+<section id="portfolio" class="py-24 lg:py-36 px-6 lg:px-14 bg-ink-surface">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="text-center mb-12 reveal">
+      <p class="text-gold text-xs font-semibold tracking-[0.35em] uppercase mb-4">Our Work</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-bold text-white mb-5">The Portfolio</h2>
+      <p class="text-gray-500 text-sm max-w-md mx-auto">Every photo is a story of transformation. Browse our work and find your next look.</p>
+    </div>
+
+    <!-- Filter pills -->
+    <div class="flex flex-wrap justify-center gap-2 mb-10 reveal">
+      <button class="fpill active" data-f="all">All Work</button>
+      <button class="fpill" data-f="cuts">Cuts &amp; Fades</button>
+      <button class="fpill" data-f="braids">Braids</button>
+      <button class="fpill" data-f="color">Color</button>
+      <button class="fpill" data-f="beard">Beard</button>
+    </div>
+
+    <!-- Grid -->
+    <div id="pgrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 reveal">
+
+      <div class="port-item pi aspect-square" data-c="cuts">
+        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=500&q=80" alt="Fade Cut">
+        <div class="port-overlay"><span class="text-white text-xs font-semibold">Low Fade</span></div>
+      </div>
+
+      <div class="port-item pi col-span-2 aspect-video md:aspect-square" data-c="braids">
+        <img src="https://images.unsplash.com/photo-1578950435899-d4ee7bec3e8f?w=700&q=80" alt="Box Braids">
+        <div class="port-overlay"><span class="text-white text-xs font-semibold">Box Braids</span></div>
+      </div>
+
+      <div class="port-item pi aspect-square" data-c="beard">
+        <img src="https://images.unsplash.com/photo-1599351431613-18ef1fdd27e1?w=500&q=80" alt="Beard Trim">
+        <div class="port-overlay"><span class="text-white text-xs font-semibold">Beard Sculpt</span></div>
+      </div>
+
+      <div class="port-item pi aspect-square" data-c="cuts">
+        <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=500&q=80" alt="High Fade">
+        <div class="port-overlay"><span class="text-white text-xs font-semibold">High Fade</span></div>
+      </div>
+
+      <div class="port-item pi aspect-square" data-c="color">
+        <img src="https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=500&q=80" alt="Color">
+        <div class="port-overlay"><span class="text-white text-xs font-semibold">Color Treatment</span></div>
+      </div>
+
+      <div class="port-item pi aspect-square" data-c="cuts">
+        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=500&q=80" alt="Classic Taper">
+        <div class="port-overlay"><span class="text-white text-xs font-semibold">Classic Taper</span></div>
+      </div>
+
+      <div class="port-item pi aspect-square" data-c="beard">
+        <img src="https://images.unsplash.com/photo-1534297635766-a262cdcb8ee4?w=500&q=80" alt="Beard Style">
+        <div class="port-overlay"><span class="text-white text-xs font-semibold">Full Beard</span></div>
+      </div>
+
+      <div class="port-item pi col-span-2 aspect-video" data-c="braids">
+        <img src="https://images.unsplash.com/photo-1590739225287-bd31519780c3?w=700&q=80" alt="Cornrows">
+        <div class="port-overlay"><span class="text-white text-xs font-semibold">Cornrow Style</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     TESTIMONIALS
+═══════════════════════════════════════════════════════ -->
+<section class="py-24 lg:py-36 px-6 lg:px-14 bg-ink">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="text-center mb-16 reveal">
+      <p class="text-gold text-xs font-semibold tracking-[0.35em] uppercase mb-4">Client Love</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-bold text-white">What They Say</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+
+      <div class="t-card bg-ink-card rounded-2xl p-7 reveal">
+        <div class="flex gap-0.5 mb-5">
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <p class="text-gray-300 text-sm leading-relaxed italic mb-6">"Kar is genuinely talented. I came in with a vague idea and left with the cleanest fade I've ever had. He took time to understand exactly what I wanted. I won't go anywhere else."</p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/48?img=3" alt="Tunde" class="w-10 h-10 rounded-full object-cover">
+          <div>
+            <p class="text-white text-sm font-semibold">Tunde Okafor</p>
+            <p class="text-gray-500 text-xs">Regular Client, 3 years</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-card bg-ink-card rounded-2xl p-7 reveal stagger-1">
+        <div class="flex gap-0.5 mb-5">
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <p class="text-gray-300 text-sm leading-relaxed italic mb-6">"As a natural hair girl, finding someone who genuinely knows how to handle afro texture is rare. 6KarKutz is a gem. My twist-out lasted 2 weeks and I got compliments everywhere I went!"</p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/48?img=5" alt="Amara" class="w-10 h-10 rounded-full object-cover">
+          <div>
+            <p class="text-white text-sm font-semibold">Amara Eze</p>
+            <p class="text-gray-500 text-xs">Client since 2023</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-card bg-ink-card rounded-2xl p-7 reveal stagger-2">
+        <div class="flex gap-0.5 mb-5">
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <p class="text-gray-300 text-sm leading-relaxed italic mb-6">"Booked 6KarKutz for my wedding day grooming — seamless experience. He arrived on time, was professional, and I looked absolutely sharp. My groomsmen were jealous!"</p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/48?img=7" alt="Emeka" class="w-10 h-10 rounded-full object-cover">
+          <div>
+            <p class="text-white text-sm font-semibold">Emeka Chukwu</p>
+            <p class="text-gray-500 text-xs">Wedding Client, 2025</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     BOOKING
+═══════════════════════════════════════════════════════ -->
+<section id="booking" class="py-24 lg:py-36 px-6 lg:px-14 bg-[#090909]">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-24">
+
+    <!-- Info -->
+    <div class="reveal">
+      <p class="text-gold text-xs font-semibold tracking-[0.35em] uppercase mb-4">Ready to Transform?</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-bold text-white mb-10">Book Your<br><span class="italic">Session</span></h2>
+
+      <!-- Hours -->
+      <div class="mb-10">
+        <p class="text-white text-xs font-semibold tracking-[0.25em] uppercase mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Hours of Operation
+        </p>
+        <div class="space-y-0.5">
+          <div class="flex justify-between py-3 border-b border-ink-border">
+            <span class="text-gray-500 text-sm">Monday – Friday</span>
+            <span class="text-white text-sm font-medium">9:00 AM – 7:00 PM</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-ink-border">
+            <span class="text-gray-500 text-sm">Saturday</span>
+            <span class="text-white text-sm font-medium">8:00 AM – 8:00 PM</span>
+          </div>
+          <div class="flex justify-between py-3">
+            <span class="text-gray-500 text-sm">Sunday</span>
+            <span class="text-gold text-sm font-medium">10:00 AM – 4:00 PM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="mb-10">
+        <p class="text-white text-xs font-semibold tracking-[0.25em] uppercase mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Location
+        </p>
+        <p class="text-gray-300 text-sm leading-relaxed">12 Bush Bar, 9th Mile<br>Enugu, Nigeria.</p>
+      </div>
+
+      <!-- Contact + Social -->
+      <div>
+        <p class="text-white text-xs font-semibold tracking-[0.25em] uppercase mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Contact
+        </p>
+        <div class="space-y-3 mb-6">
+          <a href="tel:+2348101837353" class="flex items-center gap-3 text-gray-400 hover:text-gold transition-colors text-sm">
+            <svg class="w-4 h-4 text-gold flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+            +234 810 183 7353
+          </a>
+          <a href="mailto:hello@6karkutz.ng" class="flex items-center gap-3 text-gray-400 hover:text-gold transition-colors text-sm">
+            <svg class="w-4 h-4 text-gold flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+            adaezeejikeme53@gmail.com
+          </a>
+        </div>
+
+        <!-- Social icons -->
+        <div class="flex gap-3">
+          <a href="https://instagram.com/fran6karr?igsh=a2V3cGdpb2ZiY3Rt" aria-label="Instagram" class="w-10 h-10 rounded-full bg-ink-card border border-ink-border flex items-center justify-center text-gray-500 hover:text-gold hover:border-gold transition-all">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://wa.me/2348101837353" aria-label="WhatsApp" class="w-10 h-10 rounded-full bg-ink-card border border-ink-border flex items-center justify-center text-gray-500 hover:text-gold hover:border-gold transition-all">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-ink-card border border-ink-border flex items-center justify-center text-gray-500 hover:text-gold hover:border-gold transition-all">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full bg-ink-card border border-ink-border flex items-center justify-center text-gray-500 hover:text-gold hover:border-gold transition-all">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.52V6.75a4.85 4.85 0 01-1.02-.06z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking form -->
+    <div class="reveal stagger-1">
+      <div class="bg-ink-card rounded-2xl p-8 border border-ink-border">
+        <h3 class="font-serif text-2xl text-white font-semibold mb-7">Schedule an Appointment</h3>
+
+        <form id="bform" class="space-y-5" onsubmit="submitBooking(event)">
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-gray-500 mb-1.5">Full Name</label>
+              <input type="text" placeholder="Chidi Okonkwo" required class="finput">
+            </div>
+            <div>
+              <label class="block text-xs text-gray-500 mb-1.5">Phone</label>
+              <input type="tel" placeholder="+234 800 000 0000" required class="finput">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs text-gray-500 mb-1.5">Email Address</label>
+            <input type="email" placeholder="you@email.com" class="finput">
+          </div>
+
+          <div>
+            <label class="block text-xs text-gray-500 mb-1.5">Select Service</label>
+            <select required class="finput text-gray-300 cursor-pointer" style="background:#0d0d0d">
+              <option value="">Choose a service…</option>
+              <optgroup label="Haircuts" style="background:#1f1f1f">
+                <option>Men's Cut — ₦3,500</option>
+                <option>Women's Cut &amp; Style — ₦6,000</option>
+                <option>Kids Cut — ₦2,500</option>
+              </optgroup>
+              <optgroup label="Styling" style="background:#1f1f1f">
+                <option>Blow-Out &amp; Style — ₦5,000</option>
+                <option>Waves &amp; Curls — ₦4,500</option>
+                <option>Loc Maintenance — ₦7,000+</option>
+              </optgroup>
+              <optgroup label="Braids &amp; Extensions" style="background:#1f1f1f">
+                <option>Box Braids — ₦12,000+</option>
+                <option>Cornrows — ₦5,000+</option>
+                <option>Faux Locs — ₦18,000+</option>
+              </optgroup>
+              <optgroup label="Beard" style="background:#1f1f1f">
+                <option>Beard Trim &amp; Shape — ₦2,500</option>
+                <option>Hot Towel Shave — ₦3,500</option>
+                <option>Cut + Beard Combo — ₦5,500</option>
+              </optgroup>
+              <optgroup label="Color &amp; Special" style="background:#1f1f1f">
+                <option>Full Color — ₦15,000+</option>
+                <option>Wedding Grooming — ₦25,000</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-gray-500 mb-1.5">Preferred Date</label>
+            <input type="date" id="bdate" required class="finput text-gray-300 cursor-pointer">
+          </div>
+
+          <div>
+            <label class="block text-xs text-gray-500 mb-3">Preferred Time</label>
+            <div class="grid grid-cols-3 gap-2" id="slots">
+              <button type="button" onclick="pickSlot(this)" class="slot">9:00 AM</button>
+              <button type="button" onclick="pickSlot(this)" class="slot">10:00 AM</button>
+              <button type="button" onclick="pickSlot(this)" class="slot">11:00 AM</button>
+              <button type="button" onclick="pickSlot(this)" class="slot">12:00 PM</button>
+              <button type="button" onclick="pickSlot(this)" class="slot">1:00 PM</button>
+              <button type="button" onclick="pickSlot(this)" class="slot">2:00 PM</button>
+              <button type="button" onclick="pickSlot(this)" class="slot">3:00 PM</button>
+              <button type="button" onclick="pickSlot(this)" class="slot">4:00 PM</button>
+              <button type="button" onclick="pickSlot(this)" class="slot">5:00 PM</button>
+            </div>
+            <input type="hidden" id="chosenTime">
+          </div>
+
+          <div>
+            <label class="block text-xs text-gray-500 mb-1.5">Notes <span class="text-gray-700">(optional)</span></label>
+            <textarea rows="3" placeholder="Reference style, allergies, or any special request…" class="finput resize-none"></textarea>
+          </div>
+
+          <button type="submit" class="btn-gold w-full py-4 rounded-xl text-sm">Confirm Booking</button>
+        </form>
+
+        <!-- Success -->
+        <div id="bsuccess" class="hidden text-center py-10">
+          <div class="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h4 class="font-serif text-2xl text-white mb-2">Booking Received!</h4>
+          <p class="text-gray-500 text-sm">We'll confirm your slot within 30 minutes via WhatsApp or call.</p>
+          <button onclick="resetForm()" class="mt-6 text-gold text-sm underline underline-offset-4">Book another appointment</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer class="bg-[#060606] border-t border-ink-border pt-16 pb-10 px-6 lg:px-14">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-3 gap-10 mb-12">
+
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <img src="IMG-20260409-WA0059(2).jpg" alt="6KarKutz" class="h-10 w-10 rounded-full object-cover">
+          <div>
+            <p class="font-serif text-lg font-bold text-white">6KarKutz</p>
+            <p class="text-[0.6rem] text-gray-600 tracking-[0.2em] uppercase">Breath of Fresh Hair</p>
+          </div>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed max-w-xs">Premium barbering and natural hair care in Lagos. We transform hair, build confidence.</p>
+      </div>
+
+      <div>
+        <p class="text-white text-xs font-semibold tracking-[0.25em] uppercase mb-5">Navigation</p>
+        <div class="space-y-3">
+          <a href="#about"       class="block text-gray-600 hover:text-gold text-sm transition-colors">About</a>
+          <a href="#services"    class="block text-gray-600 hover:text-gold text-sm transition-colors">Services</a>
+          <a href="#specialties" class="block text-gray-600 hover:text-gold text-sm transition-colors">Specialties</a>
+          <a href="#portfolio"   class="block text-gray-600 hover:text-gold text-sm transition-colors">Portfolio</a>
+          <a href="#booking"     class="block text-gray-600 hover:text-gold text-sm transition-colors">Book Appointment</a>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-white text-xs font-semibold tracking-[0.25em] uppercase mb-5">Get in Touch</p>
+        <div class="space-y-3">
+          <a href="tel:+2348101837353" class="flex items-center gap-2 text-gray-600 hover:text-gold text-sm transition-colors">
+            <svg class="w-4 h-4 text-gold/60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+            +234 810 183 7353
+          </a>
+          <a href="mailto:hello@6karkutz.ng" class="flex items-center gap-2 text-gray-600 hover:text-gold text-sm transition-colors">
+            <svg class="w-4 h-4 text-gold/60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+            hello@6karkutz.ng
+          </a>
+          <p class="flex items-start gap-2 text-gray-600 text-sm">
+            <svg class="w-4 h-4 text-gold/60 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            12 Balogun St, Surulere, Lagos
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="border-t border-ink-border pt-8 flex flex-col md:flex-row justify-between items-center gap-3">
+      <p class="text-gray-700 text-xs">© 2026 6KarKutz. All rights reserved.</p>
+      <div class="flex gap-5">
+        <a href="#" class="text-gray-700 hover:text-gold text-xs transition-colors">Privacy Policy</a>
+        <a href="#" class="text-gray-700 hover:text-gold text-xs transition-colors">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════ -->
+<script>
+  /* ── Navbar scroll ── */
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  /* ── Mobile menu ── */
+  const burger = document.getElementById('burger');
+  const mobileNav = document.getElementById('mobile-nav');
+  const bOpen = document.getElementById('burger-open');
+  const bClose = document.getElementById('burger-close');
+  let open = false;
+
+  burger.addEventListener('click', () => {
+    open = !open;
+    mobileNav.classList.toggle('hidden', !open);
+    bOpen.classList.toggle('hidden', open);
+    bClose.classList.toggle('hidden', !open);
+  });
+
+  function closeNav() {
+    open = false;
+    mobileNav.classList.add('hidden');
+    bOpen.classList.remove('hidden');
+    bClose.classList.add('hidden');
+  }
+
+  /* ── Scroll reveal ── */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ── Portfolio filter ── */
+  document.querySelectorAll('.fpill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.fpill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.f;
+      document.querySelectorAll('.pi').forEach(item => {
+        const show = f === 'all' || item.dataset.c === f;
+        item.style.opacity = show ? '1' : '0.12';
+        item.style.pointerEvents = show ? '' : 'none';
+      });
+    });
+  });
+
+  /* ── Time slot picker ── */
+  function pickSlot(el) {
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('chosenTime').value = el.textContent;
+  }
+
+  /* ── Set min date ── */
+  document.getElementById('bdate').min = new Date().toISOString().split('T')[0];
+
+  /* ── Booking submit ── */
+  function submitBooking(e) {
+    e.preventDefault();
+    if (!document.getElementById('chosenTime').value) {
+      alert('Please select a time slot.');
+      return;
+    }
+    document.getElementById('bform').classList.add('hidden');
+    document.getElementById('bsuccess').classList.remove('hidden');
+  }
+
+  function resetForm() {
+    document.getElementById('bform').reset();
+    document.getElementById('bform').classList.remove('hidden');
+    document.getElementById('bsuccess').classList.add('hidden');
+    document.getElementById('chosenTime').value = '';
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
+  }
+</script>
+
+</body>
+</html>
