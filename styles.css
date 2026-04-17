@@ -1,0 +1,197 @@
+/* ─────────────────────────────────────────────
+   KarKutz — Custom Stylesheet
+   Tailwind utility classes live in index.html.
+   This file covers all component-level styles
+   that cannot be expressed with Tailwind alone.
+───────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: #0d0d0d; color: #f0f0f0; font-family: 'Inter', sans-serif; }
+
+
+/* ── Gold gradient text ── */
+.gold-text {
+  background: linear-gradient(135deg, #c9a84c 0%, #f0d98a 50%, #a0833a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ── Gold left-border accent ── */
+.gold-line { position: relative; padding-left: 1rem; }
+.gold-line::before {
+  content: '';
+  position: absolute; left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 100%;
+  background: #c9a84c; border-radius: 2px;
+}
+
+
+/* ── Navigation ── */
+#navbar { transition: background 0.3s, box-shadow 0.3s; }
+#navbar.scrolled {
+  background: rgba(13, 13, 13, 0.97) !important;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 rgba(201, 168, 76, 0.15);
+}
+
+
+/* ── Scroll reveal animation ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.stagger-1 { transition-delay: 0.1s; }
+.reveal.stagger-2 { transition-delay: 0.2s; }
+.reveal.stagger-3 { transition-delay: 0.3s; }
+.reveal.visible   { opacity: 1; transform: translateY(0); }
+
+
+/* ── Hero background ── */
+.hero-bg {
+  background-image: url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1920&q=85');
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+}
+
+
+/* ── Buttons ── */
+.btn-gold {
+  background: linear-gradient(135deg, #c9a84c, #e8c96d);
+  color: #0d0d0d;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  display: inline-block;
+}
+.btn-gold:hover {
+  background: linear-gradient(135deg, #e8c96d, #c9a84c);
+  box-shadow: 0 8px 28px rgba(201, 168, 76, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  transition: all 0.25s ease;
+  display: inline-block;
+}
+.btn-outline:hover { border-color: #c9a84c; color: #c9a84c; }
+
+
+/* ── Service cards ── */
+.service-card {
+  border: 1px solid #2c2c2c;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.service-card:hover {
+  border-color: rgba(201, 168, 76, 0.5);
+  transform: translateY(-5px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(201, 168, 76, 0.1);
+}
+
+
+/* ── Portfolio grid items ── */
+.port-item {
+  overflow: hidden;
+  border-radius: 0.75rem;
+  position: relative;
+  cursor: pointer;
+}
+.port-item img {
+  transition: transform 0.5s ease;
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.port-item:hover img { transform: scale(1.06); }
+
+.port-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+}
+.port-item:hover .port-overlay { opacity: 1; }
+
+
+/* ── Portfolio filter pills ── */
+.fpill {
+  border: 1px solid #2c2c2c;
+  color: #9ca3af;
+  border-radius: 9999px;
+  padding: 0.4rem 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.fpill:hover  { border-color: #c9a84c; color: #c9a84c; }
+.fpill.active { background: #c9a84c; border-color: #c9a84c; color: #0d0d0d; }
+
+
+/* ── Booking time slots ── */
+.slot {
+  cursor: pointer;
+  border: 1px solid #2c2c2c;
+  color: #9ca3af;
+  border-radius: 0.5rem;
+  padding: 0.45rem 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s;
+}
+.slot:hover  { border-color: #c9a84c; color: #c9a84c; }
+.slot.active { background: #c9a84c; border-color: #c9a84c; color: #0d0d0d; }
+
+
+/* ── Form inputs ── */
+.finput {
+  background: #0d0d0d;
+  border: 1px solid #2c2c2c;
+  color: #f0f0f0;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.finput::placeholder { color: #4b5563; }
+.finput:focus {
+  outline: none;
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12);
+}
+
+
+/* ── Testimonial cards ── */
+.t-card { border-left: 3px solid #c9a84c; }
+
+
+/* ── Specialty section watermark numbers ── */
+.spec-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 4.5rem;
+  line-height: 1;
+  color: rgba(201, 168, 76, 0.08);
+  position: absolute;
+  top: -0.5rem; left: 0;
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+}
+
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: #0d0d0d; }
+::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
